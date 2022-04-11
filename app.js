@@ -24,13 +24,13 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/payrolls', payrollRoutes);
 app.use('/api/dayoffs', dayoffRoutes);
 
-app.use(notFound);
-app.use(errorHandler);
-
 //GET
 app.get('/', (req, res) => {
   res.send('API is running...');
 })
+
+app.use(notFound);
+app.use(errorHandler);
 
 //Connect to DB
 mongoose.connect(process.env.DB_CONNECTION, () =>
