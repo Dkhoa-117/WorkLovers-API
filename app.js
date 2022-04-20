@@ -13,12 +13,12 @@ app.use(express.urlencoded({
 }));
 
 //IMPORT ROUTES
-app.use('/uploads', express.static('uploads'));
 const userRoutes = require('./routes/userRouters');
 const notificationRoutes = require('./routes/notificationRouters');
 const payrollRoutes = require('./routes/payrollRouters');
 const dayoffRoutes = require('./routes/dayoffRouters');
 
+app.use('/uploads', express.static('uploads'));
 app.use('/api/users', userRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/payrolls', payrollRoutes);
