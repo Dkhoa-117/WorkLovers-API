@@ -15,7 +15,6 @@ app.use(
 );
 
 //IMPORT ROUTES
-// app.use('/uploads', express.static('uploads'));
 const userRoutes = require("./routes/userRouters");
 const notificationRoutes = require("./routes/notificationRouters");
 const payrollRoutes = require("./routes/payrollRouters");
