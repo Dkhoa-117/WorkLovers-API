@@ -13,6 +13,21 @@ app.use(
 		extended: true,
 	})
 );
+const admin = require("firebase-admin");
+const firebase = require("firebase/app");
+
+const configJsonFirebase = require("./config/keys/firebase.json");
+var defaultAppConfig = {
+	credential: admin.credential.cert(configJsonFirebase),
+};
+const secondaryAppConfig = {
+	projectId: "workmanager-4955d",
+	apiKey: "AIzaSyAMQ0ttPovHkEJPqKvi8cShkO9iPx5Kdik",
+};
+
+// Initialize the default app
+firebase.initializeApp(secondaryAppConfig);
+admin.initializeApp(defaultAppConfig);
 
 //IMPORT ROUTES
 const userRoutes = require("./routes/userRouters");
@@ -33,6 +48,7 @@ app.get("/", (req, res) => {
 
 app.use(notFound);
 app.use(errorHandler);
+
 //Connect to DB
 mongoose.connect(process.env.DB_CONNECTION, () =>
 	console.log("CONNECT TO DATABASE!")
@@ -45,4 +61,5 @@ mongoose.connect(process.env.DB_CONNECTION, () =>
 // MongoClient.collection("newdb").insertOne(myobj);
 
 //Listening
-app.listen(3000);
+const port = process.env.PORT || 3000;
+app.listen(port);

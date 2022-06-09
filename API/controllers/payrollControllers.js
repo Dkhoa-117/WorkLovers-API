@@ -1,7 +1,6 @@
 const User = require("../models/User");
 const Role = require("../models/Role");
 const Dayoff = require("../models/Dayoff");
-
 const Payroll = require("../models/Payroll");
 
 exports.createPayroll = async (req, res) => {
@@ -43,6 +42,7 @@ exports.createPayrolls = async (req, res) => {
 					$lte: date1,
 					$gte: date2,
 				},
+				staff_id: staff_id[i],
 			});
 			let num_days =
 				(date1.getTime() - date2.getTime()) / (1000 * 24 * 3600) + 1;
@@ -50,8 +50,8 @@ exports.createPayrolls = async (req, res) => {
 			let wage = 1;
 			let detail = "";
 			for (let j = 0; j < dayoffs.length; j++) {
-				date1 = new Date(dayoffs[j].period.to);
-				date2 = new Date(dayoffs[j].period.from);
+				date1 = new Date(dayoffs[j].period.from);
+				date2 = new Date(dayoffs[j].period.to);
 				detail = detail.concat(
 					"- nghi ngay: " +
 						date1.toLocaleDateString() +
@@ -59,7 +59,7 @@ exports.createPayrolls = async (req, res) => {
 						date2.toLocaleDateString() +
 						". \n"
 				);
-				let temp = (date1.getTime() - date2.getTime()) / (1000 * 24 * 3600) + 1;
+				let temp = (date2.getTime() - date1.getTime()) / (1000 * 24 * 3600) + 1;
 				num_dayoffs = num_dayoffs + temp;
 			}
 			if (num_dayoffs === 0) {
@@ -80,7 +80,7 @@ exports.createPayrolls = async (req, res) => {
 				throw new Error("something went wrong");
 			}
 		}
-		//Payroll.insertMany(result);
+		Payroll.insertMany(result);
 		res.json(result);
 	} catch (error) {
 		res.status(500).json({ error: "Something went wrong" });

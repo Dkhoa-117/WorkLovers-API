@@ -1,7 +1,6 @@
 const Notification = require("../models/Notification");
 const firebase = require("firebase-admin");
-const configJsonFirebase = require("../config/keys/workmanager-4955d-firebase-adminsdk-td42m-3d113eb1a0.json");
-
+const sanitize = require("mongo-sanitize");
 exports.getAllNotifications = async (req, res) => {
 	try {
 		const notifications = await Notification.find().sort({ create_at: -1 });
@@ -29,13 +28,15 @@ exports.deleteNotification = async (req, res) => {
 exports.createNotification = async (req, res) => {
 	try {
 		const notification = new Notification({
-			content: req.body.content,
-			priority: req.body.priority,
+			title: sanitize(req.body.title),
+			content: sanitize(req.body.content),
+			priority: sanitize(req.body.priority),
 		});
 		const newNotification = await notification.save();
 		res.status(201).json(newNotification);
 	} catch (error) {
 		res.status(500).json({ error: "Something went wrong" });
+		console.log(error);
 	}
 };
 
@@ -55,15 +56,10 @@ exports.getNotification = async (req, res) => {
 	}
 };
 
-var defaultAppConfig = {
-	credential: firebase.credential.cert(configJsonFirebase),
-};
-// Initialize the default app
-firebase.initializeApp(defaultAppConfig);
-
 exports.sendNotification = (req, res) => {
 	try {
 		const data = req.body.notificationData;
+		console.log(data);
 		const time = req.body.time;
 		let message = {
 			android: {
@@ -74,7 +70,7 @@ exports.sendNotification = (req, res) => {
 			},
 			notification: {
 				title: data.title,
-				body: "bang luon thang ../2022",
+				body: "bang luon thang 6/2022",
 			},
 			data: {
 				_id: data.content._id,

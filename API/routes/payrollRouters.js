@@ -8,7 +8,7 @@ router
 	.post(protect, admin, PayrollCtrl.createPayroll)
 	.get(protect, admin, PayrollCtrl.getAllPayroll);
 
-router.post("/create", PayrollCtrl.createPayrolls);
+router.route("/create").post(protect, admin, PayrollCtrl.createPayrolls);
 
 router.route("/mypayroll").get(protect, PayrollCtrl.getMyPayrolls);
 
