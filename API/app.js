@@ -21,8 +21,8 @@ var defaultAppConfig = {
 	credential: admin.credential.cert(configJsonFirebase),
 };
 const secondaryAppConfig = {
-	projectId: "workmanager-4955d",
-	apiKey: "AIzaSyAMQ0ttPovHkEJPqKvi8cShkO9iPx5Kdik",
+	projectId: process.env.FIREBASE_PROJECT_ID,
+	apiKey: process.env.FIREBASE_API_KEY,
 };
 
 // Initialize the default app
