@@ -27,16 +27,52 @@ exports.deleteNotification = async (req, res) => {
 
 exports.createNotification = async (req, res) => {
 	try {
-		const notification = new Notification({
-			title: sanitize(req.body.title),
-			content: sanitize(req.body.content),
-			priority: sanitize(req.body.priority),
+		console.log({ title: req.body });
+		//const {title, content, }
+		const title = req.body.title;
+		const content = req.body.content;
+		const priority = req.body.priority;
+		console.log({ title: title });
+
+		const notification = await new Notification({
+			title: title,
+			content: content,
+			priority: priority,
 		});
-		const newNotification = await notification.save();
-		res.status(201).json(newNotification);
+		let message = {
+			android: {
+				priority: "High",
+				notification: {
+					channel_id: "thong_bao",
+				},
+			},
+			notification: {
+				title: title,
+				body: content,
+			},
+			data: {
+				title: title,
+				body: content,
+			},
+			token: req.body.tokenDevice, // token của thiết bị muốn push notification
+		};
+		//console.log(message);
+		firebase
+			.messaging()
+			.send(message)
+			.then(async (response) => {
+				// Response is a message ID string.
+				const newNotification = await notification.save();
+				res
+					.status(201)
+					.json({ newNotification, message: "Successfully sent message!" });
+			})
+			.catch((error) => {
+				//return error
+				throw new Error("Error sending message!");
+			});
 	} catch (error) {
 		res.status(500).json({ error: "Something went wrong" });
-		console.log(error);
 	}
 };
 
@@ -90,12 +126,10 @@ exports.sendNotification = (req, res) => {
 			.then((response) => {
 				// Response is a message ID string.
 				res.status(200).json({ message: "Successfully sent message!" });
-				console.log("Successfully sent message:", response);
 			})
 			.catch((error) => {
 				//return error
 				res.status(500).json({ message: "Error sending message!" });
-				console.log("Error sending message:", error);
 			});
 	} catch (error) {
 		console.log(error);
