@@ -6,6 +6,6 @@
 
 ## ABOUT THIS PROJECT
 - This project is a REST API write in NodeJS.
-- Database connect with No-SQL MongoDB Clound.
+- Database connect with No-SQL MongoDB Cloud.
 - Authentication using JWT library to generate Token, Firebase Authentication Email/Password.
 - Notification to user using Firebase Cloud Messaging.
